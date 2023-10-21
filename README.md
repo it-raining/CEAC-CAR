@@ -1,5 +1,5 @@
 # CEAC-CAR
-4INT encoder -- TIM3_CH1.2__PC6.7 -- TIM3_CH1.2__PD12.13
+4INT encoder -- TIM3_CH1.2__PC6.7 -- TIM3_CH1.2__PD12.13\\
 4PWM DC motor -- TIM2_CH3.4__PB10.11 -- TIM4_CH3.4__PB8.9
 3INT echo -- EXTI0..2 -- PC0..2
 1GPIO trig -- PC3
