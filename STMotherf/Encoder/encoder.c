@@ -4,10 +4,7 @@
 void Encoder_Init(Encoder *p1, Encoder *p2)
 {
     // HAL_TIM_Encoder_Init(htim, sConfig);
-    TIM_HandleTypeDef htim3;
-    TIM_HandleTypeDef htim4;
-
-    if (HAL_TIM_Encoder_Start_DMA(htim3, TIM_CHANNEL_ALL, p1->->value_1, p2->value_2, 16) != HAL_OK)
+    if (HAL_TIM_Encoder_Start_DMA(htim3, TIM_CHANNEL_ALL, p1->value_1, p2->value_2, 16) != HAL_OK)
         Error_Handler(); // write in main.c, maybe turn some led on?
     if (HAL_TIM_Encoder_Start_DMA(htim4, TIM_CHANNEL_ALL, p1->value_1, p2->value_2, 16) != HAL_OK)
         Error_Handler();

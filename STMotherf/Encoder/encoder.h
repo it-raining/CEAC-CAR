@@ -1,7 +1,7 @@
 #ifndef encoder_h
 #define encoder_h
 
-typedef struct 
+typedef struct
 {
     uint32_t value_1, value_2;
     TIM_HandleTypeDef *htim;
@@ -22,7 +22,7 @@ void Encoder_Init(Encoder *left, Encoder *right);
   *            @arg htm4: Timer handle 4, can shorten when known fixed pins
   * @param  p pointer to the encoder structure
 */
-int RPM(TIM_HandleTypeDef *htim, Encoder *p); 
+int RPM(TIM_HandleTypeDef *htim, Encoder *p);
 
 /**
   * @brief  Get direction of motor
