@@ -2,6 +2,7 @@
 #define _AVERAGE_FILTER_H_
 
 #define AVERAGE_LENGTH 1000
+#define map(a, b, c, d, e) (((a - b)*1.0/(c - b)) * (e - d) + d)
 
 typedef struct
 {

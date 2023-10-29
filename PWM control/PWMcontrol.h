@@ -1,6 +1,8 @@
 #ifndef _PWM_CONTROL_H_
 #define _PWM_CONTROL_H_
 
+#include "../AVERAGE FILTER/average_filter.h"
+
 #define SERVO_MAX_PULSE 500  //ums
 #define SERVO_MIN_PULSE 2400 //ums
 #define MAX_PULSE_WIDTH 255  // tim->ARR
@@ -22,14 +24,17 @@ typedef struct
 /**
   * @brief  Init Motor 
   * @param  htim Timer handle of encoder module
-  * @param  Channel1, Channel2 
+  * @param  Channel 
+  *         This parameter can be one of the following values:
+  *            @arg Channel1 : channel handle to go forward, can shorten when known fixed pins
+  *            @arg Channel2 : channel handle to go backward, can shorten when known fixed pins
+  *  
 */
 void Motor_Init(PWMcontrol *PWMcontrol, TIM_HandleTypeDef *htim, uint16_t Channel1, uint16_t Channel2);
 
 /**
   * @brief  Init Motor 
   * @param  htim Timer handle of encoder module
-  * @param  Channel1, Channel2 
 */
 void Servo_Init(PWMcontrol *PWMcontrol, TIM_HandleTypeDef *htim, uint16_t PWM);
 
@@ -45,6 +50,6 @@ void set_motor(PWMcontrol *PWMcontrol, byte direction, uint16_t PWM);
 */
 void set_servo(PWMcontrol *PWMcontrol, uint16_t PWM);
 
-// void HandleCar(PWMcontrol *MotorLeft, PWMcontrol *MotorRight, PWMcontrol *Servo);
 
+// void HandleCar(PWMcontrol *MotorLeft, PWMcontrol *MotorRight, PWMcontrol *Servo);
 #endif

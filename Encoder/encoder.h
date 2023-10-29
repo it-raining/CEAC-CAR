@@ -1,13 +1,19 @@
 #ifndef _ENCODER_H_
 #define _ENCODER_H_
 
+#include "../PID/PID.h"
+#include "../AVERAGE FILTER/average_filter.h"
+
 #define MAX_COUNTER ((1 << 16) - 1)
+#define TIME_SAMPLING  100 // ms
+// set based on Specification of your motor
+#define MAX_RPM 5000 
 #define PULSE_PER_REVOLUTION 98
-#define TIME_SAMPLING  100//ms
 
 typedef struct
 {
     int16_t RPM;
+    int16_t PWM;
     uint32_t pre_counter;
 } Encoder;
 

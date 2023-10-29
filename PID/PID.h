@@ -4,7 +4,8 @@
 // #include ""
 
 #define MAX_INTEGRAL 20000000 //
-#define MAX_PID_VALUE 8000 // 
+#define MAX_PID_VALUE 1000 // 
+
 
 typedef struct
 {

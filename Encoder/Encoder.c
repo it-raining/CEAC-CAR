@@ -3,6 +3,7 @@
 void resetEncoder(Encoder *en)
 {
     en->RPM = 0;
+    en->PWM = 0;
     en->pre_counter = 0;
 }
 
@@ -43,5 +44,6 @@ void updateEncoder(Encoder *en, TIM_HandleTypeDef *htim)
         }
     }
     en->RPM = (diffPulse / PULSE_PER_REVOLUTION) / (60 * TIME_SAMPLING * 0.1); 
+    en->PWM = map(en->RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
     en->pre_counter = cur_counter; 
 }
