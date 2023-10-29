@@ -9,6 +9,7 @@ void Motor_Init(PWMcontrol *PWMcontrol, TIM_HandleTypeDef *htim, uint16_t Channe
     __HAL_TIM_SET_COMPARE(PWMcontrol->htim, PWMcontrol->Channel2, 0);
     return;
 }
+
 void Servo_Init(PWMcontrol *PWMcontrol, TIM_HandleTypeDef *htim, uint16_t PWM_middle)
 {
     PWMcontrol->htim = htim;
@@ -16,7 +17,7 @@ void Servo_Init(PWMcontrol *PWMcontrol, TIM_HandleTypeDef *htim, uint16_t PWM_mi
     return;
 }
 
-void set_motor_speed(PWMcontrol *PWMcontrol, byte direction, uint16_t PWM)
+void set_motor(PWMcontrol *PWMcontrol, byte direction, uint16_t PWM)
 {
     if (direction == BACKWARD)
     {

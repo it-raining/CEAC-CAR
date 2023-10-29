@@ -10,7 +10,7 @@ void updateEncoder(Encoder *en, TIM_HandleTypeDef *htim)
 {
     static byte firstCall = 0;
     uint16_t cur_counter = htim->Instance->CNT;
-    int16_t diffPulse = 0;
+    int32_t diffPulse = 0;
     if (!firstCall)
     {
         en->RPM = 0;
