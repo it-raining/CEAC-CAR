@@ -3,6 +3,9 @@
 
 #define PULSE 98
 #define MAX_COUNTER ((1 << 16) - 1)
+#define TIME_SAMPLING 1
+#define MAX_RPM 1
+#define MAX_PID_VALUE 1
 
 typedef struct
 {
