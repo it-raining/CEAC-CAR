@@ -1,6 +1,7 @@
 # CEAC-CAR
-4INT encoder -- TIM3_CH1.2__PC6.7 -- TIM3_CH1.2__PD12.13\
-4PWM DC motor -- TIM2_CH3.4__PB10.11 -- TIM4_CH3.4__PB8.9\
+4INT encoder -- TIM3_CH1.2__PC6.7 -- TIM4_CH1.2__PD12.13\  
+    OC after 16-bit pulses
+4PWM DC motor -- TIM8_CH1..4 -- PC6..9\
 3INT echo -- EXTI0..2 -- PC0..2\
 1GPIO trig -- PC3\
 8 analog do line -- ADC1-INT0..7 -- DMA2 Stream0 -- PA0..7\
