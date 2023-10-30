@@ -3,7 +3,7 @@
 void TimerInit(TIM_HandleTypeDef *h_time, uint32_t Channel)
 {
     // Enable Output Compare Mode
-    HAL_StatusTypeDef HAL_TIM_OC_Start_IT(TIM_HandleTypeDef * htim, uint32_t Channel);
+    HAL_TIM_OC_Start_IT(h_time, Channel);
 }
 
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
