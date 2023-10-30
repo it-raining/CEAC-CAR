@@ -19,32 +19,15 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
             right->_RPM = 0;
             firstCall++;
         }
-        else
-        {
-            if (HAL_TIME_IS_TIM_COUNTING_DOWN(htim))
-            {
-                diffPulse = ((cur_counter - left->pre_counter + MAX_COUNTER) % MAX_COUNTER);
-            }
-            else
-            {
-                diffPulse = (cur_counter - left->pre_counter + MAX_COUNTER) % MAX_COUNTER;
-            }
-            left->_RPM = (diffPulse / PULSE) / (60 * TIME_SAMPLING * 0.1);
-            left->_PWM = map(left->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
-            left->pre_counter = htim->Instance->CNT;
+        diffPulse = ((cur_counter - left->pre_counter + MAX_COUNTER) % MAX_COUNTER);
+        left->_RPM = (diffPulse / PULSE) / (60 * TIME_SAMPLING * 0.1);
+        left->_PWM = map(left->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
+        left->pre_counter = htim->Instance->CNT;
 
-            if (HAL_TIME_IS_TIM_COUNTING_DOWN(htim))
-            {
-                diffPulse = ((cur_counter - right->pre_counter + MAX_COUNTER) % MAX_COUNTER);
-            }
-            else
-            {
-                diffPulse = (cur_counter - right->pre_counter + MAX_COUNTER) % MAX_COUNTER;
-            }
-
-            right->_RPM = (diffPulse / PULSE) / (60 * TIME_SAMPLING * 0.1);
-            right->_PWM = map(right->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
-            right->pre_counter = htim->Instance->CNT;
+        diffPulse = ((cur_counter - right->pre_counter + MAX_COUNTER) % MAX_COUNTER);
+        right->_RPM = (diffPulse / PULSE) / (60 * TIME_SAMPLING * 0.1);
+        right->_PWM = map(right->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
+        right->pre_counter = htim->Instance->CNT;
     }
 }
 
