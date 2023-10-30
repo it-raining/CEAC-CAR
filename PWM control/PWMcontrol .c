@@ -50,3 +50,8 @@ void set_servo(PWMcontrol *PWMcontrol, uint16_t PWM)
     __HAL_TIM_SET_COMPARE(PWMcontrol->htim, PWMcontrol->Channel1, PWM);
     return;
 }
+
+void control_motor(PWMcontrol *motorLeft, PWMcontrol *motorRight, uint16 leftPWM, uint16_t rightPWM)
+{
+    
+}
