@@ -44,21 +44,23 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
         if (!firstCall)
         {
             left->_RPM = 0;
+            left->_PWM = 0;
             right->_RPM = 0;
+            right->_PWM = 0;
+            
             firstCall++;
         }
         else
         {
             updateDiffPulse(left, htim, cur_counter, &diffPulse);
+            left->_RPM = (diffPulse / PULSE_PER_REVOLUTION) / (60 * TIME_SAMPLING * 0.1);
+            left->_PWM = map(left->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
+            left->pre_counter = htim->Instance->CNT;
             updateDiffPulse(right, htim, cur_counter, &diffPulse);
-        }
-        left->_RPM = (diffPulse / PULSE_PER_REVOLUTION) / (60 * TIME_SAMPLING * 0.1);
-        left->_PWM = map(left->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
-        left->pre_counter = htim->Instance->CNT;
-
-        right->_RPM = (diffPulse / PULSE_PER_REVOLUTION) / (60 * TIME_SAMPLING * 0.1);
-        right->_PWM = map(right->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
-        right->pre_counter = htim->Instance->CNT;
+            right->_RPM = (diffPulse / PULSE_PER_REVOLUTION) / (60 * TIME_SAMPLING * 0.1);
+            right->_PWM = map(right->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
+            right->pre_counter = htim->Instance->CNT;
+        }   
     }
 }
 
