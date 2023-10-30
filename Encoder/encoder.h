@@ -12,10 +12,10 @@
 
 typedef struct
 {
-    TIM_HandleTypeDef *htim;
     int16_t _RPM;
     int16_t _PWM;
     uint32_t pre_counter;
+    TIM_HandleTypeDef *htim;
 } Encoder;
 
 Encoder *left, *right;

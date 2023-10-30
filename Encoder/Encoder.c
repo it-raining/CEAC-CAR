@@ -24,7 +24,7 @@ void updateDiffPulse(Encoder* en, TIM_HandleTypeDef *htim, uint16_t cur_counter,
     {
         if (HAL_TIME_IS_TIM_COUNTING_DOWN(htim))
         {
-            *diffPulse = en->pre_counter - cur_counter;
+            *diffPulse = -(en->pre_counter - cur_counter);
         }
         else
         {
