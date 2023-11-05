@@ -54,11 +54,23 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
         {
             updateDiffPulse(left, htim, cur_counter, &diffPulse);
             left->_RPM = (diffPulse / PULSE_PER_REVOLUTION) / (60 * TIME_SAMPLING * 0.1);
-            left->_PWM = map(left->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
-            left->pre_counter = htim->Instance->CNT;
             updateDiffPulse(right, htim, cur_counter, &diffPulse);
             right->_RPM = (diffPulse / PULSE_PER_REVOLUTION) / (60 * TIME_SAMPLING * 0.1);
+
+            /*
+            * If the first three bits of SMCR register are set to 0x3
+            * then the timer is set in X4 mode (TIM_ENCODERMODE_TI12)
+            * and we need to divide the pulses counter by two, because
+            * they include the pulses for both the channels *
+            *///
+            if ((TIM3->SMCR & 0x3) == 0x3 && (TIM4->SMCR & 0x3) == 0x3)
+            {
+                left->_RPM /= 2;
+                right->_RPM /= 2;
+            }
+            left->_PWM = map(left->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
             right->_PWM = map(right->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
+            left->pre_counter = htim->Instance->CNT;
             right->pre_counter = htim->Instance->CNT;
         }   
     }
