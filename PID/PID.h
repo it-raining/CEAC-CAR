@@ -1,7 +1,7 @@
 #ifndef PID_CONTROL_H_
 #define PID_CONTROL_H_
 
-// #include ""
+#include <stdbool.h>
 
 #define MAX_INTEGRAL 20000000 //
 #define MAX_PID_VALUE 1000 // 
@@ -15,6 +15,7 @@ typedef struct
     int16_t pre_error;
     int32_t integral_error;
     int16_t output_PID;
+    bool isSaturation;
 } PID_instance;
 
 void set_PID_gain(PID_instance *PID, float p, float i, float d);

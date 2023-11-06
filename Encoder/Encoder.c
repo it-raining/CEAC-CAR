@@ -61,8 +61,8 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
             * If the first three bits of SMCR register are set to 0x3
             * then the timer is set in X4 mode (TIM_ENCODERMODE_TI12)
             * and we need to divide the pulses counter by two, because
-            * they include the pulses for both the channels *
-            *///
+            * they include the pulses for both the channels
+            */
             if ((TIM3->SMCR & 0x3) == 0x3 && (TIM4->SMCR & 0x3) == 0x3)
             {
                 left->_RPM /= 2;
@@ -78,15 +78,15 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 
 void Encoder_Init(Encoder *p1, TIM_HandleTypeDef *h_time_1, Encoder *p2, TIM_HandleTypeDef *h_time_2)
 {
-    p1->RPM = 0;
-    p1->PWM = 0;
+    p1->_RPM = 0;
+    p1->_PWM = 0;
     p1->pre_counter = 0;
     p1->htim = h_time_1;
     if (HAL_TIM_Encoder_Start(p1->htim, TIM_CHANNEL_ALL) != HAL_OK)
         Error_Handler(); // write in main.c, maybe turn some led on?
 
-    p2->RPM = 0;
-    p2->PWM = 0;
+    p2->_RPM = 0;
+    p2->_PWM = 0;
     p2->pre_counter = 0;
     p2->htim = h_time_2;
     if (HAL_TIM_Encoder_Start(p2->htim, TIM_CHANNEL_ALL) != HAL_OK)
