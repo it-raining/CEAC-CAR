@@ -1,39 +1,39 @@
 # CEAC-CAR
 - 4INT encoder
-- TIM3
-	- CH1 : PB4
-	- CH2 : PB5
- - TIM4
-	- CH1 : PD12
-	- CH2 : PD13
+	- TIM3
+		- CH1 : PB4
+		- CH2 : PB5
+ 	- TIM4
+		- CH1 : PD12
+		- CH2 : PD13
  
 - OC after 16-bit pulses 4PWM DC motor
- - TIM8
-	- CH1 : PC6
-	- CH2 : PC7
-	- CH3 : PC8	
-	- CH4 : PC9
+ 	- TIM8
+		- CH1 : PC6
+		- CH2 : PC7
+		- CH3 : PC8	
+		- CH4 : PC9
  
 - 3INT echo
- - TIM9
-	- CH2 : PE6
- - TIM10
-	- CH1 : PB8 
- - TIM11
-	- CH1 : PB9
+ 	- TIM9
+		- CH2 : PE6
+ 	- TIM10
+		- CH1 : PB8 
+ 	- TIM11
+		- CH1 : PB9
 
 - 1GPIO trig : PC3
 
 - 8 analog do line
- - ADC1 - DMA2 Stream0
-	- INT0 - PA0
-	- INT1 - PA1
-	- INT2 - PA2
-	- INT3 - PA3
-	- INT4 - PA4
-	- INT5 - PA5
-	- INT6 - PA6
-	- INT7 - PA7
+ 	- ADC1 - DMA2 Stream0
+		- INT0 - PA0
+		- INT1 - PA1
+		- INT2 - PA2
+		- INT3 - PA3
+		- INT4 - PA4
+		- INT5 - PA5
+		- INT6 - PA6
+		- INT7 - PA7
 
 - 3x5 GPIO LED 7 
 	- GROUP 1: 
