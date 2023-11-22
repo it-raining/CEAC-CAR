@@ -47,15 +47,10 @@ void output_PID(PID_instance *PID, int16_t error_input, uint16_t sampling_rate)
                     + PID->d_gain * (error_input - PID->pre_error) * sampling_rate;
 
     int16_t raw_value = PID->output_PID;
-<<<<<<< Updated upstream
     constrain(&(PID->output_PID), -MAX_PID_VALUE, MAX_PID_VALUE);
     
     PID->isSaturation = (raw_value != PID->output_PID) && (raw_value * error_input > 0); //check saturation and same sign
-=======
-    constrain(PID->output_PID, -MAX_PID_VALUE, MAX_PID_VALUE);
-    //check saturation and same sign
-    PID->isSaturation = (raw_value != PID->output_PID) && (raw_value * error_input > 0); 
->>>>>>> Stashed changes
     PID->pre_error = error_input;
+
     return;
 }
