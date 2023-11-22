@@ -17,17 +17,16 @@ void reset_PID_gain(PID_instance *PID)
     return;
 }
 
-void constrain(int32_t &value, int32_t min_value, int32_t max_value)
+void constrain(int32_t *value, int32_t min_value, int32_t max_value)
 {
-    if (value > max_value)
+    if (*value > max_value)
     {
-        value = max_value;
+        *value = max_value;
     }
-    if (value < min_value)
+    if (*value < min_value)
     {
-        value = min_value;
+        *value = min_value;
     }
-    return;
 }
 
 void output_PID(PID_instance *PID, int16_t error_input, uint16_t sampling_rate)
@@ -40,14 +39,14 @@ void output_PID(PID_instance *PID, int16_t error_input, uint16_t sampling_rate)
     }
 
     
-    constrain(PID->integral_error, -MAX_INTEGRAL, MAX_INTEGRAL);
+    constrain(&(PID->integral_error), -MAX_INTEGRAL, MAX_INTEGRAL);
     
     PID->output_PID = PID->p_gain * error_input 
                     + value_I
                     + PID->d_gain * (error_input - PID->pre_error) * sampling_rate;
 
     int16_t raw_value = PID->output_PID;
-    constrain(PID->output_PID, -MAX_PID_VALUE, MAX_PID_VALUE);
+    constrain(&(PID->output_PID), -MAX_PID_VALUE, MAX_PID_VALUE);
     
     PID->isSaturation = (raw_value != PID->output_PID) && (raw_value * error_input > 0); //check saturation and same sign
     PID->pre_error = error_input;

@@ -3,6 +3,7 @@
 
 #include "../PID/PID.h"
 #include "../AVERAGE FILTER/average_filter.h"
+#include "../PWM control/PWMcontrol.h"
 
 #define NUMS_OF_ENC 2
 
@@ -18,26 +19,24 @@ typedef struct
     int16_t _RPM;
     int16_t _PWM;
     uint32_t pre_counter;
+    int8_t Direction;
     TIM_HandleTypeDef *htim;
 } Encoder;
 
-Encoder *left, *right;
 
-
-void updateDiffPulse(Encoder* en, TIM_HandleTypeDef *htim, uint16_t cur_counter, int32_t *diffPulse);
+void updateDiffPulse(Encoder* en, int32_t *diffPulse);
 /**
   * @brief  Reset all paramater in Encoder structure
   * @param  *en is pointer to the encoder structure
 */
-void Encoder_Init(Encoder *p1, TIM_HandleTypeDef *h_time_1, Encoder *p2, TIM_HandleTypeDef *h_time_2);
+void Encoder_Init(Encoder *p1, TIM_HandleTypeDef *h_time);
 /**
   * @brief  update all values of encoder
   * @param  htim Timer handle of encoder module
   * @param  *en is pointer to the encoder structure
 */
-void TimerInit(TIM_HandleTypeDef *h_time, uint32_t Channel);
+void TimerInitENC(TIM_HandleTypeDef *h_time, uint32_t Channel);
 
-
-byte Direction(Encoder *p);
+void updateEncoder(Encoder *enc, bool mode4X);
 
 #endif

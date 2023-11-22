@@ -1,6 +1,7 @@
 #ifndef _AVERAGE_FILTER_H_
 #define _AVERAGE_FILTER_H_
 
+#include "main.h"
 #define AVERAGE_LENGTH 1000
 #define map(a, b, c, d, e) (((a - b)*1.0/(c - b)) * (e - d) + d)
 

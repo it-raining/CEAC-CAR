@@ -1,106 +1,69 @@
 #include "encoder.h"
 
-void TimerInit(TIM_HandleTypeDef *h_time, uint32_t Channel)
+void TimerInitENC(TIM_HandleTypeDef *h_time, uint32_t Channel)
 {
     // Enable Output Compare Mode
     HAL_TIM_OC_Start_IT(h_time, Channel);
 }
 
-void updateDiffPulse(Encoder* en, TIM_HandleTypeDef *htim, uint16_t cur_counter, int32_t *diffPulse)
+void updateDiffPulse(Encoder *enc, int32_t *diffPulse)
 {
-
-    if (cur_counter > en->pre_counter)
+    uint16_t cur_counter = enc->htim->Instance->CNT;
+    if (cur_counter > enc->pre_counter)
     {
-        if (HAL_TIME_IS_TIM_COUNTING_DOWN(htim))
+        if (__HAL_TIM_IS_TIM_COUNTING_DOWN(enc->htim))
         {
-            *diffPulse = -((en->pre_counter - cur_counter + MAX_COUNTER) % MAX_COUNTER);
+            *diffPulse = -((enc->pre_counter - cur_counter + MAX_COUNTER) % MAX_COUNTER);
         }
         else
         {
-            *diffPulse = cur_counter - en->pre_counter;
+            *diffPulse = cur_counter - enc->pre_counter;
         }
     }
     else
     {
-        if (HAL_TIME_IS_TIM_COUNTING_DOWN(htim))
+        if (__HAL_TIM_IS_TIM_COUNTING_DOWN(enc->htim))
         {
-            *diffPulse = -(en->pre_counter - cur_counter);
+            *diffPulse = -(enc->pre_counter - cur_counter);
         }
         else
         {
-            *diffPulse = (cur_counter - en->pre_counter + MAX_COUNTER) % MAX_COUNTER;
+            *diffPulse = (cur_counter - enc->pre_counter + MAX_COUNTER) % MAX_COUNTER;
         }
     }
     return;
 }
-
-void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
+// HAL_TIM_OC_DelayElapsedCallback bỏ vào
+/*
+ * If the first three bits of SMCR register are set to 0x3
+ * then the timer is set in X4 mode (TIM_ENCODERMODE_TI12)
+ * and we need to divide the pulses counter by two, because
+ * they include the pulses for both the channels
+ */
+void updateEncoder(Encoder *enc, bool mode4X)
 {
-    if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4) //redeclare if active another channel
-    {
-        static byte firstCall = 0;
-        uint16_t cur_counter = htim->Instance->CNT;
-        int32_t diffPulse = 0;
-        if (!firstCall)
-        {
-            left->_RPM = 0;
-            left->_PWM = 0;
-            right->_RPM = 0;
-            right->_PWM = 0;
-            
-            firstCall++;
-        }
-        else
-        {
-            updateDiffPulse(left, htim, cur_counter, &diffPulse);
-            left->_RPM = (diffPulse / PULSE_PER_REVOLUTION) / (60 * TIME_SAMPLING * 0.1);
-            updateDiffPulse(right, htim, cur_counter, &diffPulse);
-            right->_RPM = (diffPulse / PULSE_PER_REVOLUTION) / (60 * TIME_SAMPLING * 0.1);
+    int32_t diffPulse = 0;
+    updateDiffPulse(enc, &diffPulse);
+    enc->_RPM = ((diffPulse / PULSE_PER_REVOLUTION) * 60 * 1000) / TIME_SAMPLING;
 
-            /*
-            * If the first three bits of SMCR register are set to 0x3
-            * then the timer is set in X4 mode (TIM_ENCODERMODE_TI12)
-            * and we need to divide the pulses counter by two, because
-            * they include the pulses for both the channels
-            */
-            if ((TIM3->SMCR & 0x3) == 0x3 && (TIM4->SMCR & 0x3) == 0x3)
-            {
-                left->_RPM /= 2;
-                right->_RPM /= 2;
-            }
-            left->_PWM = map(left->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
-            right->_PWM = map(right->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
-            left->pre_counter = htim->Instance->CNT;
-            right->pre_counter = htim->Instance->CNT;
-        }   
+    // if ((TIM3->SMCR & 0x3) == 0x3 && (TIM4->SMCR & 0x3) == 0x3)
+    if (mode4X)
+    {
+        enc->_RPM /= 2;
     }
+    enc->_PWM = map(enc->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
+    enc->pre_counter = enc->htim->Instance->CNT;
+    if (enc->_RPM < 0) enc->Direction = BACKWARD;
+    else if (enc->_RPM > 0) enc->Direction = FORWARD;
+    else enc->Direction = STOP;
 }
 
-void Encoder_Init(Encoder *p1, TIM_HandleTypeDef *h_time_1, Encoder *p2, TIM_HandleTypeDef *h_time_2)
+void Encoder_Init(Encoder *p1, TIM_HandleTypeDef *h_time)
 {
     p1->_RPM = 0;
     p1->_PWM = 0;
     p1->pre_counter = 0;
-    p1->htim = h_time_1;
+    p1->htim = h_time;
     if (HAL_TIM_Encoder_Start(p1->htim, TIM_CHANNEL_ALL) != HAL_OK)
         Error_Handler(); // write in main.c, maybe turn some led on?
-
-    p2->_RPM = 0;
-    p2->_PWM = 0;
-    p2->pre_counter = 0;
-    p2->htim = h_time_2;
-    if (HAL_TIM_Encoder_Start(p2->htim, TIM_CHANNEL_ALL) != HAL_OK)
-        Error_Handler();
-}
-
-byte Direction(Encoder *p)
-{
-    if (HAL_TIME_IS_TIM_COUNTING_DOWN(p->htim))
-    {
-        return -1;
-    }
-    else
-    {
-        return (p->htim->instance->CNT != p->pre_counter) ? 1 : 0;
-    }
 }
