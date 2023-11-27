@@ -33,7 +33,7 @@ void updateDiffPulse(Encoder *enc, int32_t *diffPulse)
     }
     return;
 }
-// HAL_TIM_OC_DelayElapsedCallback bỏ vào
+// HAL_TIM_PeriodElapsedCallback bỏ vào
 /*
  * If the first three bits of SMCR register are set to 0x3
  * then the timer is set in X4 mode (TIM_ENCODERMODE_TI12)

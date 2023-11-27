@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "pwmcontrol.h": "c"
+        "pwmcontrol.h": "c",
+        "main.h": "c"
     }
 }
