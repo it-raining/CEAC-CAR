@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "pwmcontrol.h": "c",
-        "main.h": "c"
+        "main.h": "c",
+        "average_filter.h": "c"
     }
 }

@@ -79,6 +79,7 @@ static void MX_UART4_Init(void);
   */
 int main(void)
 {
+  // (&htim4)->Instance->CCR1;
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */

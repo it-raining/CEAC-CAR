@@ -41,8 +41,9 @@ typedef struct
 void Motor_Init(PWMcontrol *motor, TIM_HandleTypeDef *htim, uint16_t Channel1, uint16_t Channel2);
 
 /**
-  * @brief  Init Motor
+  * @brief  Init servo
   * @param  htim Timer handle of encoder module
+  * @param  PWM used to control speed
 */
 void Servo_Init(PWMcontrol *servo, TIM_HandleTypeDef *htim, uint16_t PWM);
 
@@ -54,10 +55,9 @@ void Servo_Init(PWMcontrol *servo, TIM_HandleTypeDef *htim, uint16_t PWM);
 void set_motor(PWMcontrol *motor, int8_t direction, uint16_t PWM);
 /**
   * @brief  Set angle of servo
-  * @param  PWM is duty cycle
+  * @param  PWM used to control angle of servo
 */
 void set_servo(PWMcontrol *servo, uint16_t PWM);
 
-// void HandleCar(PWMcontrol *MotorLeft, PWMcontrol *MotorRight, PWMcontrol *Servo);
 #endif
 

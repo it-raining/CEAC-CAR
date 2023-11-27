@@ -23,3 +23,15 @@ void apply_filter(average_filter *filter, int16_t input)
 
     filter->out = filter->sum / AVERAGE_LENGTH;
 }
+
+void constrain(int32_t *value, int32_t min_value, int32_t max_value)
+{
+    if (*value > max_value)
+    {
+        *value = max_value;
+    }
+    if (*value < min_value)
+    {
+        *value = min_value;
+    }
+}

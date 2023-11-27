@@ -18,17 +18,6 @@ void reset_PID_gain(PID_instance *PID)
     return;
 }
 
-void constrain(int32_t *value, int32_t min_value, int32_t max_value)
-{
-    if (*value > max_value)
-    {
-        *value = max_value;
-    }
-    if (*value < min_value)
-    {
-        *value = min_value;
-    }
-}
 
 void output_PID(PID_instance *PID, int16_t error_input, uint16_t sampling_rate)
 {
