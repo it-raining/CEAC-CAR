@@ -1,6 +1,6 @@
 #include "ultraSonic.h"
 
-void ultraSonic_Init(ultraSonic *sensor, TIM_HandleTypeDef *htim, GPIO_TypeDef *TrigPort, uint16_t TrigPin)
+void ultraSonic_Init(ultraSonic *sensor, TIM_HandleTypeDef *htim, average_filter *filter, GPIO_TypeDef *TrigPort, uint16_t TrigPin)
 {
     sensor->htim = htim;
     sensor->pre_time = 0;
@@ -8,23 +8,41 @@ void ultraSonic_Init(ultraSonic *sensor, TIM_HandleTypeDef *htim, GPIO_TypeDef *
     sensor->TrigPort = TrigPort;
     sensor->TrigPin = TrigPin;
     sensor->echoHigh = false;
-    DWT_Delay_Init();
+    sensor->filter = filter;
+    HAL_GPIO_WritePin(sensor->TrigPort, sensor->TrigPin, 0);
     reset_buffer(sensor->filter);
 }
 
 // throw into void HAL_TIM_IC_CaptureCallback (TIM_HandleTypeDef* htim)
 void updateDistance(ultraSonic *sensor)
 {
-    if (sensor->echo == true)
+    if (sensor->htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
     {
-        sensor->pre_time = sensor->htim->Instance->CNT; // ? or CCR ?
+        if (sensor->echoHigh == false)
+        {
+            sensor->pre_time = HAL_TIM_ReadCapturedValue(sensor->htim, TIM_CHANNEL_1);
+//            __HAL_TIM_SET_CAPTUREPOLARITY(sensor->htim, TIM_CHANNEL_1, TIM_INPUTCHANNELPOLARITY_FALLING);
+            sensor->echoHigh = true;
+            __HAL_TIM_DISABLE_IT(sensor->htim, TIM_IT_CC1);
+            __HAL_TIM_ENABLE_IT(sensor->htim, TIM_IT_CC2);
+        }
     }
-    else 
-    {   
-        apply_filter(sensor->filter, sensor->htim->Instance->CNT - sensor->pre_time);
-        sensor->distance = ((SOUND_SPEED * STEP_TIMER1) * (sensor->filter->out)) / 2; 
+    else if (sensor->htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
+    {
+    	if (sensor->echoHigh == true)
+    	        {
+    	//        	uint32_t diffTime = (sensor->htim->Instance->CCR1 - sensor->pre_time + TIMER_STEP_CYCLE) % TIMER_STEP_CYCLE;
+    	        	uint32_t diffTime = (HAL_TIM_ReadCapturedValue(sensor->htim, TIM_CHANNEL_2) - sensor->pre_time + TIMER_STEP_CYCLE) % TIMER_STEP_CYCLE;
+
+    	            apply_filter(sensor->filter, diffTime);
+    	            sensor->distance = ((SOUND_SPEED * STEP_TIMER) * (sensor->filter->out)) / 2;
+    	            sensor->echoHigh = false;
+    	            sensor->htim->Instance->CNT = 0;
+
+//    	            __HAL_TIM_SET_CAPTUREPOLARITY(sensor->htim, TIM_CHANNEL_1, TIM_INPUTCHANNELPOLARITY_RISING);
+    	            __HAL_TIM_DISABLE_IT(sensor->htim, TIM_IT_CC2);
+    	        }
     }
-    sensor->echoHigh = !sensor->echoHigh;
 }
 
 // throw into void SysTick_CallBack(void)
@@ -42,7 +60,15 @@ void updateDistance(ultraSonic *sensor)
 void activeTrigger(ultraSonic *sensor)
 {
     HAL_GPIO_WritePin(sensor->TrigPort, sensor->TrigPin, 1);
-    DWT_Delay_us(10);
+    delay_us(sensor->htim, 10);
     HAL_GPIO_WritePin(sensor->TrigPort, sensor->TrigPin, 0);
+    __HAL_TIM_ENABLE_IT(sensor->htim, TIM_IT_CC1);
+//    __HAL_TIM_ENABLE_IT(sensor->htim, TIM_IT_CC2);
+}
+
+void delay_us(TIM_HandleTypeDef *htim, uint16_t time)
+{
+    htim->Instance->CNT = 0; // __HAL_TIM_SET_COUNTER(&htim, Cnt);
+    while (htim->Instance->CNT < time);  // while (__HAL_TIM_GET_COUNTER(&htim) < time)
 }
 
