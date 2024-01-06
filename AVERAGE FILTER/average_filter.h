@@ -9,7 +9,7 @@ typedef struct
 {
     int16_t buffer[AVERAGE_LENGTH];
     int32_t sum;
-    int16_t out;
+    float out;
     uint16_t count; 
 } average_filter;
 

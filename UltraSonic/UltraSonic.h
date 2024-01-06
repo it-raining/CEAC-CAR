@@ -39,7 +39,7 @@ void ultraSonic_Init(ultraSonic *sensor, TIM_HandleTypeDef *htim, average_filter
   * @brief  update all paramater in ultra sonic structure
   * @param  *sensor is pointer to the ultra sonic structure
 */
-void updateDistance(ultraSonic *sensor);
+void updateDistance(ultraSonic *sensor, uint32_t Channel);
 
 /**
   * @brief  set trig pin and active Interrupt
@@ -53,4 +53,6 @@ void activeTrigger(ultraSonic *sensor);
   * @param  time is the time you need to delay
 **/
 void delay_us(TIM_HandleTypeDef *htim, uint16_t time);
+
+
 #endif
