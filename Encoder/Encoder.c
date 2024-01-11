@@ -33,8 +33,13 @@ void updateDiffPulse(Encoder *enc, int32_t *diffPulse)
     }
     return;
 }
-
-// HAL_TIM_PeriodElapsedCallback bỏ vào
+// HAL_TIM_OC_DelayElapsedCallback bỏ vào
+/*
+ * If the first three bits of SMCR register are set to 0x3
+ * then the timer is set in X4 mode (TIM_ENCODERMODE_TI12)
+ * and we need to divide the pulses counter by two, because
+ * they include the pulses for both the channels
+ */
 void updateEncoder(Encoder *enc, bool mode4X)
 {
     int32_t diffPulse = 0;
@@ -44,7 +49,11 @@ void updateEncoder(Encoder *enc, bool mode4X)
     // if ((TIM3->SMCR & 0x3) == 0x3 && (TIM4->SMCR & 0x3) == 0x3)
     if (mode4X)
     {
-        enc->_RPM /= 2;
+        enc->_RPM /= 4;
+    }
+    else
+    {
+    	enc->_RPM /= 2;
     }
     enc->_PWM = map(enc->_RPM, 0, MAX_RPM, 0, MAX_PID_VALUE);
     enc->pre_counter = enc->htim->Instance->CNT;
